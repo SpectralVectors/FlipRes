@@ -1,43 +1,38 @@
+import bpy
+from bl_ui import properties_output
+from .properties_output_flipres import classes
+
 bl_info = {
     "name": "Flip Resolution",
     "author": "Spectral Vectors",
-    "version": (1, 0),
+    "version": (1, 2),
     "blender": (2, 80, 0),
     "location": "Properties > Output > Format",
-    "description": "Switches your render X/Y resolution from Landscape to Portrait and back",
+    "description": "Switches your render from Landscape to Portrait and back",
     "category": "Render"
 }
 
-import bpy
 
-class FlipResolution(bpy.types.Operator):
-    """Flips the X/Y render resolution: Landscape to Portrait"""
-    bl_idname = "render.flip_resolution"
-    bl_label = "Flip X/Y Resolution"
+output_props = [cls for cls in properties_output.classes]
 
-    def execute(self, context):
-        res_x = context.scene.render.resolution_x
-        res_y = context.scene.render.resolution_y
-        new_y = res_x
-        new_x = res_y
-        context.scene.render.resolution_x = new_x
-        context.scene.render.resolution_y = new_y        
-        return {'FINISHED'}
 
-def extra_button(self, context):
-    layout = self.layout
-    split = layout.split(factor=0.4)
-    split.label(text='')
-    split.operator('render.flip_resolution', icon='FILE_REFRESH')
-        
 def register():
-    bpy.utils.register_class(FlipResolution)
-    bpy.types.RENDER_PT_format.prepend(extra_button)
+    for cls in output_props:
+        if cls.is_registered:
+            bpy.utils.unregister_class(cls)
+
+    for cls in classes:
+        bpy.utils.register_class(cls)
+
 
 def unregister():
-    bpy.utils.unregister_class(FlipResolution)
-    bpy.types.RENDER_PT_format.remove(extra_button)
-    
+    for cls in classes:
+        bpy.utils.unregister_class(cls)
+
+    for cls in output_props:
+        if not cls.is_registered:
+            bpy.utils.register_class(cls)
+
 
 if __name__ == "__main__":
     register()
