@@ -6,4 +6,4 @@ This addon adds a convenient button to the Output > Format panel in Blender's Pr
 
 With a single click it will swap your X and Y resolution, allowing you to quickly switch between Landscape and Portrait modes without rotating your camera or render.
 
-![](/FlipRes.png)
+![](/FlipResv1.png)
